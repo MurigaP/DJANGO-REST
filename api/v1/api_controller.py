@@ -116,9 +116,33 @@ def consumer_endpoint(request):
             api_response['message'] = "Error occurred [Error info -->> {}".format(str(e))
             return HttpResponse(json.dumps(api_response), content_type='application/json')
 
+    elif request.method == 'GET':
+        consumer_object = consumers.objects.all()
 
+        consumers_list = []
 
+        for consumer in consumer_object:
+            response = dict({})
 
+            response['connection_code'] = consumer['connection_code']
+            response['consumer_name'] = consumer['consumer_name']
+            response['zone_id'] = consumer['zone_id']
+            response['zone_name'] = consumer['zone_name']
+            response['route_id'] = consumer['route_id']
+            response['route_name'] = consumer['route_name']
+            response['plot_number'] = consumer['plot_number']
+            response['balance'] = consumer['balance']
+            response['serial_no'] = consumer['serial_no']
+            response['phone_number'] = consumer['phone_number']
+            response['connection_status'] = consumer['connection_status']
+
+            consumers_list.append(response)
+        return HttpResponse(json.dumps(consumers_list), content_type='application/json')
+
+    else:
+        api_response['statusCode'] = 500
+        api_response['message'] = "INVALID HTTP REQUEST METHOD ONLY POST, DELETE, PUT, GET ALLOWED"
+    return HttpResponse(json.dumps(api_response), content_type='application/json')
 
 
 
