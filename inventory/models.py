@@ -27,7 +27,7 @@ class consumers(models.Model):
     connectionstatus = models.CharField(max_length=256, choices=SEVERITY)
 
     def __unicode__(self):
-        return self.custname
+        return str(self.accountno)
 
 
 class payments(models.Model):

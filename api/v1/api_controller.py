@@ -15,7 +15,7 @@ api_response = dict({})
 
 
 @csrf_exempt
-@require_http_methods(['POST,PUT,DELETE, GET'])
+@require_http_methods(['POST', 'PUT', 'DELETE', 'GET'])
 def consumer_endpoint(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -124,18 +124,17 @@ def consumer_endpoint(request):
         for consumer in consumer_object:
             response = dict({})
 
-            response['connection_code'] = consumer['connection_code']
-            response['consumer_name'] = consumer['consumer_name']
-            response['zone_id'] = consumer['zone_id']
-            response['zone_name'] = consumer['zone_name']
-            response['route_id'] = consumer['route_id']
-            response['route_name'] = consumer['route_name']
-            response['plot_number'] = consumer['plot_number']
-            response['balance'] = consumer['balance']
-            response['serial_no'] = consumer['serial_no']
-            response['phone_number'] = consumer['phone_number']
-            response['connection_status'] = consumer['connection_status']
-
+            response['connection_code'] = consumer.connectioncode
+            response['consumer_name'] = consumer.custname
+            response['zone_id'] = consumer.zoneid
+            response['zone_name'] = consumer.zonename
+            response['route_id'] = consumer.Route
+            response['route_name'] = consumer.routename
+            response['plot_number'] = consumer.plotnumber
+            response['balance'] = consumer.balance
+            response['serial_no'] = consumer.serialno
+            response['phone_number'] = consumer.phone
+            response['connection_status'] = consumer.connectionstatus
             consumers_list.append(response)
         return HttpResponse(json.dumps(consumers_list), content_type='application/json')
 
