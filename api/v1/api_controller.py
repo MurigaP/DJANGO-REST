@@ -3,13 +3,16 @@ __author__ = 'hudutech'
 from inventory.models import consumers
 
 from django.http.response import HttpResponse
+from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.db import IntegrityError
+from inventory.models import consumers
 
 import json
 
 api_response = dict({})
+
 
 @csrf_exempt
 @require_http_methods(['POST,PUT,DELETE, GET'])
@@ -52,8 +55,77 @@ def consumer_endpoint(request):
 
         except (IntegrityError, KeyError) as e:
             api_response['statusCode'] = 500
-            api_response['message'] = "Error occurred [Error info->> {}".format(str(e))
+            api_response['message'] = "Error occurred [Error info -->> {}".format(str(e))
             return HttpResponse(json.dumps(api_response), content_type='application/json')
+
+    elif request.method == 'PUT':
+        data = json.loads(request.body)
+
+        try:
+            # since account no is the pk we use it to update other fields
+            account_no = data['account_no']
+
+            connection_code = data['connection_code']
+            consumer_name = data['consumer_name']
+            zone_id = data['zone_id']
+            zone_name = data['zone_name']
+            route_id = data['route_id']
+            route_name = data['route_name']
+            plot_number = data['plot_number']
+            balance = data['balance']
+            serial_no = data['serial_no']
+            phone_number = data['phone_number']
+            connection_status = data['connection_status']
+
+            consumer = get_object_or_404(consumers, accountno=account_no)
+            consumer.custname = consumer_name
+            consumer.zoneid = zone_id
+            consumer.zonename = zone_name
+            consumer.Route = route_id
+            consumer.routename = route_name
+            consumer.plotnumber = plot_number
+            consumer.balance = balance
+            consumer.serialno = serial_no
+            consumer.phone = phone_number
+            consumer.connectioncode = connection_code
+            consumer.connectionstatus = connection_status
+
+            api_response['statusCode'] = 201
+            api_response['message'] = "Consumer Updated Successfully"
+            return HttpResponse(json.dumps(api_response), content_type='application/json')
+        except (IntegrityError, KeyError) as e:
+            api_response['statusCode'] = 500
+            api_response['message'] = "Error occurred [Error info -->> {}".format(str(e))
+            return HttpResponse(json.dumps(api_response), content_type='application/json')
+
+    elif request.method == 'DELETE':
+        data = json.loads(request.body)
+        try:
+            account_no = data['account_no']
+
+            consumer = get_object_or_404(consumers, accountno=account_no)
+            consumer.delete()
+
+            api_response['statusCode'] = 204
+            api_response['message'] = "Consumer deleted Successfully"
+            return HttpResponse(json.dumps(api_response), content_type='application/json')
+
+        except KeyError, e:
+
+            api_response['statusCode'] = 500
+            api_response['message'] = "Error occurred [Error info -->> {}".format(str(e))
+            return HttpResponse(json.dumps(api_response), content_type='application/json')
+
+
+
+
+
+
+
+
+
+
+
 
 
 
