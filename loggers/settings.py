@@ -11,7 +11,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-SECRET_KEY = '123'
 
 
 INSTALLED_APPS = [
